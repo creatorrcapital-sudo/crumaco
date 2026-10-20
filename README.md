@@ -241,6 +241,16 @@ node scripts/check-banned-words.mjs                            # compliance grep
 
 ## Deploy (Vercel)
 
+**Live:** https://crumaco.vercel.app (Vercel project `crumaco/crumaco`).
+
+**Auto-deploy:** the Vercel Git integration is connected.
+- Every push to `main` deploys to production at the address above, usually within a minute or two.
+- Branches and pull requests get preview deployments.
+- Preview and per-deployment addresses (`crumaco-crumaco…`, `crumaco-git-…`) sit behind Vercel's default login protection. The production address is public.
+- To make previews public too: Vercel dashboard → Project → Settings → Deployment Protection → Vercel Authentication off.
+
+Setting up from scratch:
+
 1. Import the repository in Vercel. The framework preset is Next.js and needs no changes.
 2. Add the environment variables above, including the Supabase keys before launch.
 3. Set `NEXT_PUBLIC_SITE_URL` to the final domain once it is connected.
