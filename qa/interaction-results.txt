@@ -1,0 +1,42 @@
+PASS  [390] sticky bar hidden over the hero
+PASS  [390] sticky bar shown after the hero
+PASS  [390] sticky bar hides while another primary button is on screen
+PASS  [390] sticky bar hidden at the form
+PASS  [390] never more than one primary button on screen  (max 1)
+PASS  [390] menu opens
+PASS  [390] focus moves into the menu
+PASS  [390] Escape closes the menu
+PASS  [390] focus returns to the menu button
+PASS  [390] menu link closes menu and goes to #lab
+PASS  [390] 'Longevity' card opens Longevity System  (07Longevity System)
+PASS  [1440] nav transparent over the hero
+PASS  [1440] smooth scrolling (Lenis) active on desktop
+PASS  [1440] wheel scroll moves the page
+PASS  [1440] nav solid after 80px
+PASS  [1440] nav link scrolls to its section (below the nav)  (top 72px)
+PASS  [1440] opening curtain ends and stops covering the page
+PASS  [1440] floating WhatsApp visible
+PASS  [1440] 'Pain & Injury' card selects Pain Reset  (02Pain Reset™)
+PASS  [1440] arrow keys move between programme tabs  (03Body Transformation™)
+PASS  [1440] preloader plays again on reload
+PASS  [1440] credentials list: doctorate + 7 rows
+PASS  [1440] specialist certifications listed (7)
+PASS  [1440] tally reads 11 certifications
+PASS  [1440] counter starts at 0 before it is seen
+PASS  [1440] counter lands on 2.45
+PASS  [1440] 'Illustrative sample readings' label visible
+PASS  [1440] report caption visible
+PASS  [1440] WhatsApp links use wa.me with the booking message  (4 links)
+PASS  [1440] exactly one h1
+PASS  [1440] title  (CRUMACO — Sports Performance & Recovery Lab | Chhatarpur, New Delhi)
+PASS  [1440] meta description ≤ 155 chars  (141)
+PASS  [1440] JSON-LD SportsActivityLocation with founder and areaServed
+PASS  [1440] og:image present  (http://localhost:3000/opengraph-image?9197033736a5c26b)
+PASS  [1440] header/nav/main/footer landmarks
+PASS  [1440] OG image renders
+PASS  [1440] privacy page
+PASS  [reduced motion] content visible without scrolling
+PASS  [reduced motion] counters show final values
+PASS  [reduced motion] no opening curtain
+PASS  [reduced motion] no smooth-scroll hijack
+PASS  [no JS] content still visible

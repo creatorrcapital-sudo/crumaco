@@ -1,0 +1,58 @@
+PASS  [390] hero CTA goes to #begin
+PASS  [390] step 1 error shown
+PASS  [390] error announced to screen readers
+PASS  [390] step 1 group marked invalid
+PASS  [390] chip tap advances to step 2
+PASS  [390] advances to step 3
+PASS  [390] +91 prefix shown
+PASS  [390] phone error shown
+PASS  [390] email error shown
+PASS  [390] focus moved to first invalid field
+PASS  [390] advances to step 4
+PASS  [390] consent error shown
+PASS  [390] back keeps the name
+PASS  [390] success state shown
+PASS  [390] success has WhatsApp button
+PASS  [390] no horizontal scroll
+PASS  [768] hero CTA goes to #begin
+PASS  [768] step 1 error shown
+PASS  [768] error announced to screen readers
+PASS  [768] step 1 group marked invalid
+PASS  [768] chip tap advances to step 2
+PASS  [768] advances to step 3
+PASS  [768] +91 prefix shown
+PASS  [768] phone error shown
+PASS  [768] email error shown
+PASS  [768] focus moved to first invalid field
+PASS  [768] advances to step 4
+PASS  [768] consent error shown
+PASS  [768] back keeps the name
+PASS  [768] success state shown
+PASS  [768] success has WhatsApp button
+PASS  [768] no horizontal scroll
+PASS  [1440] hero CTA goes to #begin
+PASS  [1440] step 1 error shown
+PASS  [1440] error announced to screen readers
+PASS  [1440] step 1 group marked invalid
+PASS  [1440] chip tap advances to step 2
+PASS  [1440] advances to step 3
+PASS  [1440] +91 prefix shown
+PASS  [1440] phone error shown
+PASS  [1440] email error shown
+PASS  [1440] focus moved to first invalid field
+PASS  [1440] advances to step 4
+PASS  [1440] consent error shown
+PASS  [1440] back keeps the name
+PASS  [1440] success state shown
+PASS  [1440] success has WhatsApp button
+PASS  [1440] no horizontal scroll
+PASS  [kbd] founders CTA sets intent
+PASS  [kbd] arrow key selects without advancing
+PASS  [kbd] Enter advances to step 2
+PASS  [kbd] focus moves to the step heading
+PASS  [kbd] reaches step 3
+PASS  [kbd] reaches step 4
+PASS  [kbd] consent ticked with Space
+PASS  [kbd] submits and shows success
+PASS  [kbd] focus ring visible
+PASS  [spam] honeypot submission gets a quiet success

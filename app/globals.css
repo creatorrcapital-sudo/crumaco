@@ -1,0 +1,718 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* ------------------------------------------------------------------
+   CRUMACO brand tokens (match the printed brochure)
+   ------------------------------------------------------------------ */
+@theme {
+  --color-carbon: #141312;
+  --color-graphite: #1f1d1b;
+  --color-bone: #f3efe8;
+  --color-stone: #e7e1d7;
+  --color-paper: #faf8f4;
+  --color-ink: #1a1918;
+  --color-body: #3a3733;
+  --color-ash: #8b857c;
+  --color-orange: #fc811e;
+  --color-ember: #e2741a;
+  /* Ember darkened just enough to pass WCAG AA large-text contrast (3:1)
+     on bone and paper. Used for italic display words and numerals on light
+     backgrounds. Brand ember (#E2741A) measures 2.7:1 on bone. */
+  --color-ember-text: #cf6410;
+
+  --font-display: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-sans: var(--font-hanken-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --breakpoint-xs: 26rem;
+}
+
+/* shadcn primitive tokens mapped onto the brand palette */
+@theme inline {
+  --color-background: var(--color-bone);
+  --color-foreground: var(--color-ink);
+  --color-popover: var(--color-carbon);
+  --color-popover-foreground: var(--color-bone);
+  --color-border: color-mix(in srgb, var(--color-ink) 14%, transparent);
+  --color-ring: var(--color-orange);
+  --color-muted-foreground: var(--color-ash);
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    /* Sideways parallax (elements that slide in horizontally) must never make
+       the page wider than the screen: on phones that rescales the viewport.
+       `clip` (not `hidden`) keeps position: sticky working. */
+    overflow-x: clip;
+    background: var(--color-bone);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background: var(--color-orange);
+    color: var(--color-carbon);
+  }
+  /* Visible focus rings: orange on dark, ink on light (3:1 against both). */
+  :focus-visible {
+    outline: 2px solid var(--ring-color, var(--color-ink));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  [id] {
+    scroll-margin-top: 4.5rem;
+  }
+  img {
+    user-select: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Section themes
+   ------------------------------------------------------------------ */
+@utility theme-dark {
+  background-color: var(--color-carbon);
+  color: color-mix(in srgb, var(--color-bone) 82%, transparent);
+  --heading-color: var(--color-bone);
+  --accent-display: var(--color-orange);
+  --muted-color: var(--color-ash);
+  --rule-color: color-mix(in srgb, var(--color-bone) 14%, transparent);
+  --label-color: var(--color-orange);
+  --ring-color: var(--color-orange);
+}
+@utility theme-light {
+  background-color: var(--color-bone);
+  color: var(--color-body);
+  --heading-color: var(--color-ink);
+  --accent-display: var(--color-ember-text);
+  --muted-color: var(--color-body);
+  --rule-color: color-mix(in srgb, var(--color-ink) 14%, transparent);
+  --label-color: var(--color-ink);
+  --ring-color: var(--color-ink);
+}
+
+/* Topographic contour motif for dark sections. The texture is attached only
+   once a section nears the viewport ([data-near], set by enhancements.tsx),
+   so it never competes with the hero on first load. */
+@utility topo {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-size: 1600px auto;
+    background-position: center top;
+    opacity: 0.055;
+    pointer-events: none;
+  }
+}
+.topo[data-near]::before,
+html:not(.js) .topo::before {
+  background-image: url("/textures/topo.svg");
+}
+
+/* ------------------------------------------------------------------
+   Typography
+   ------------------------------------------------------------------ */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.012em;
+  color: var(--heading-color, var(--color-ink));
+  text-wrap: balance;
+  & em {
+    font-style: italic;
+    color: var(--accent-display, var(--color-ember-text));
+    letter-spacing: -0.02em;
+    padding-right: 0.04em;
+  }
+}
+
+@utility text-hero {
+  font-size: clamp(3rem, 1.55rem + 5.6vw, 5.5rem);
+}
+@utility text-h2 {
+  font-size: clamp(2.375rem, 1.6rem + 3.1vw, 4.25rem);
+}
+@utility text-h3 {
+  font-size: clamp(1.625rem, 1.3rem + 1.1vw, 2.25rem);
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--label-color, var(--color-ink));
+}
+
+/* Small label with the 20px orange dash. On light backgrounds the text stays
+   ink; the orange lives only in the dash. */
+@utility eyebrow-dash {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  &::before {
+    content: "";
+    flex: none;
+    width: 20px;
+    height: 2px;
+    background: var(--color-orange);
+  }
+}
+
+@utility lede {
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.6;
+  max-width: 62ch;
+}
+@utility prose-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 62ch;
+  @media (width >= 48rem) {
+    font-size: 1.0625rem;
+  }
+}
+
+@utility numeral {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1;
+}
+
+@utility rule {
+  border-color: var(--rule-color);
+}
+
+/* Photography grade: warm, slightly desaturated. */
+@utility photo-grade {
+  filter: saturate(0.85) contrast(1.04);
+}
+
+@utility container-x {
+  width: 100%;
+  max-width: 82.5rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 3rem;
+  }
+}
+
+@utility section-y {
+  padding-block: 6rem;
+  @media (width >= 48rem) {
+    padding-block: 8.5rem;
+  }
+  @media (width >= 80rem) {
+    padding-block: 10.5rem;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Buttons
+   ------------------------------------------------------------------ */
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: 3.25rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--color-orange);
+  color: var(--color-carbon);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  border-radius: 2px;
+  transition:
+    background-color 200ms var(--ease-out-soft),
+    transform 200ms var(--ease-out-soft);
+  &:hover {
+    background: #ff9440;
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+  &:focus-visible {
+    outline-color: var(--ring-color, var(--color-ink));
+  }
+}
+
+@utility btn-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--heading-color, var(--color-ink));
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 200ms var(--ease-out-soft);
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Motion: reveal on view (opacity + 12px rise, 600ms, ease-out, staggered).
+   Content stays visible without JS and for reduced-motion users.
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    transition:
+      opacity 600ms var(--ease-out-soft),
+      transform 600ms var(--ease-out-soft);
+    transition-delay: calc(var(--reveal-i, 0) * 80ms);
+  }
+  .js [data-reveal][data-revealed] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* AnimatedContent (components/ui/animated-content.tsx): hidden only when JS
+   runs, until GSAP takes over; visible without JS and for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .ac-pending {
+    visibility: hidden;
+  }
+}
+
+/* Change bars in the sample report. */
+.bar-fill {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .js .bar-fill {
+    transform: scaleX(0);
+    transition: transform 1100ms var(--ease-out-soft) 200ms;
+  }
+  .js [data-revealed] .bar-fill {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Opening sequence: Preloader (components/preloader.tsx), adapted from the
+   Codegrid "Nullspace" component and rebuilt in CSS. Every page load.
+     0.25–1.05s  corner tags + "CRUMACO" drop in letter by letter
+     1.15–1.85s  every letter but the C falls away
+     1.45–2.10s  "LAB" drops in beside it
+     2.05–2.70s  the C and LAB slide together
+     2.65–3.15s  they morph into the monogram (C bold, orange, raised; LAB grows)
+     3.00–3.60s  a slit opens through the middle, showing the hero
+     3.50–4.35s  the screen splits, top up and bottom down
+   Geometry is measured from Hanken Grotesk 600 (letter-spacing -0.02em):
+   "CRUMACO" 4.80em, "C" 0.688em, "LAB" 1.71em; capitals centred in a 1em
+   line. All offsets are in em, so they scale with the type at any width.
+   The hero headline is painted underneath from the first frame (transform
+   only, never opacity 0), so the preloader does not delay LCP.
+   ------------------------------------------------------------------ */
+:root {
+  --intro-delay: 3550ms;
+}
+.pl {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pl {
+    --hop: cubic-bezier(0.8, 0, 0.3, 1);
+    /* together: C and LAB side by side, centred */
+    --c-x1: 1.171em;
+    --o-x0: 0.8em;
+    --o-x1: -1.281em;
+    /* monogram: C at 75% (raised to LAB's cap line), LAB at 220% */
+    --c-x2: 0.219em;
+    --c-y2: -0.38em;
+    --o-x2: -2.381em;
+    --o-scale: 2.2;
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: block;
+    pointer-events: none;
+    animation: pl-done 1ms linear 4400ms forwards;
+  }
+  .pl-half {
+    position: absolute;
+    inset-inline: 0;
+    height: 50%;
+    overflow: hidden;
+    background: var(--color-carbon);
+  }
+  .pl-top {
+    top: 0;
+    animation:
+      pl-slit-up 600ms var(--hop) 3000ms forwards,
+      pl-split-up 850ms var(--hop) 3500ms forwards;
+  }
+  .pl-bottom {
+    bottom: 0;
+    animation:
+      pl-slit-down 600ms var(--hop) 3000ms forwards,
+      pl-split-down 850ms var(--hop) 3500ms forwards;
+  }
+  /* The stage is the full screen; the bottom half shows its lower part. */
+  .pl-stage {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 200%;
+    font-family: var(--font-sans);
+    font-size: clamp(2.75rem, 1.2rem + 5vw, 6rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--color-bone);
+  }
+  .pl-bottom .pl-stage {
+    top: -100%;
+  }
+  .pl-intro {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+  }
+  /* The mark sits clear above the monogram's tallest point (LAB at 220%:
+     cap top at -0.77em), small enough to stay a signature, not a headline.
+     It lives in the top half, so it rides up with it at the split. */
+  .pl-mark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.25em;
+    height: auto;
+    transform: translate(-50%, calc(-100% - 1.3em));
+    animation: pl-mark-in 800ms var(--hop) 300ms both;
+  }
+  .pl-outro {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + var(--o-x0));
+    display: flex;
+    white-space: nowrap;
+    transform: translate(0, -50%);
+    transform-origin: 0 50%;
+    animation: pl-outro 1100ms linear 2050ms both;
+  }
+  .pl-char {
+    position: relative;
+    display: inline-block;
+    height: 1em;
+    overflow: hidden;
+  }
+  .pl-char > span {
+    display: inline-block;
+    transform: translateY(-100%);
+  }
+  .pl-intro .pl-char > span {
+    animation: pl-in 550ms var(--hop) calc(250ms + var(--i) * 35ms) both;
+  }
+  .pl-intro .pl-char:not(.pl-first) > span {
+    animation:
+      pl-in 550ms var(--hop) calc(250ms + var(--i) * 35ms) both,
+      pl-out 500ms var(--hop) calc(1150ms + (var(--i) - 1) * 30ms) forwards;
+  }
+  .pl-outro .pl-char > span {
+    animation: pl-in 550ms var(--hop) calc(1450ms + var(--i) * 50ms) both;
+  }
+  .pl-first {
+    transform-origin: 0 0;
+    animation: pl-first 1100ms linear 2050ms both;
+  }
+  .pl-tags {
+    position: absolute;
+    inset: 0;
+  }
+  .pl-tag {
+    position: absolute;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ash);
+  }
+  .pl-tag > span {
+    display: inline-block;
+    transform: translateY(-100%);
+    animation:
+      pl-in 500ms var(--hop) calc(250ms + var(--i) * 80ms) both,
+      pl-out 500ms var(--hop) calc(3250ms + var(--i) * 60ms) forwards;
+  }
+  .pl-tag-1 {
+    top: 15%;
+    left: 15%;
+  }
+  .pl-tag-2 {
+    bottom: 15%;
+    left: 25%;
+  }
+  .pl-tag-3 {
+    right: 15%;
+    bottom: 30%;
+  }
+
+  /* Hero entrance, timed to the split. */
+  .enter {
+    animation: enter-rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--intro-delay) + var(--i, 0) * 90ms);
+  }
+  .enter-headline {
+    animation: headline-rise 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--intro-delay) + 40ms);
+  }
+  .hero-media {
+    animation: hero-settle 1900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--intro-delay) - 300ms);
+  }
+}
+@keyframes pl-mark-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 0.9em));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 1.3em));
+  }
+}
+@keyframes pl-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes pl-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes pl-first {
+  0% {
+    transform: none;
+    font-weight: 600;
+    color: var(--color-bone);
+    animation-timing-function: cubic-bezier(0.8, 0, 0.3, 1);
+  }
+  59% {
+    transform: translate(var(--c-x1), 0);
+    font-weight: 600;
+    color: var(--color-bone);
+    animation-timing-function: cubic-bezier(0.8, 0, 0.3, 1);
+  }
+  100% {
+    transform: translate(var(--c-x2), var(--c-y2)) scale(0.75);
+    font-weight: 900;
+    color: var(--color-orange);
+  }
+}
+@keyframes pl-outro {
+  0% {
+    transform: translate(0, -50%);
+    animation-timing-function: cubic-bezier(0.8, 0, 0.3, 1);
+  }
+  59% {
+    transform: translate(var(--o-x1), -50%);
+    animation-timing-function: cubic-bezier(0.8, 0, 0.3, 1);
+  }
+  100% {
+    transform: translate(var(--o-x2), -50%) scale(var(--o-scale));
+  }
+}
+@keyframes pl-slit-up {
+  to {
+    transform: translateY(-4%);
+  }
+}
+@keyframes pl-slit-down {
+  to {
+    transform: translateY(4%);
+  }
+}
+@keyframes pl-split-up {
+  to {
+    transform: translateY(-100%);
+  }
+}
+@keyframes pl-split-down {
+  to {
+    transform: translateY(100%);
+  }
+}
+/* Both keyframes hidden: a visible→hidden step over 1ms does not reliably
+   hold `hidden` once finished in Chrome. */
+@keyframes pl-done {
+  from,
+  to {
+    visibility: hidden;
+  }
+}
+/* Transform only: the preloader already hides the hero, and full opacity
+   keeps the hero's text and button at full contrast at every moment. */
+@keyframes enter-rise {
+  from {
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes headline-rise {
+  from {
+    transform: translate3d(0, 0.3em, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes hero-settle {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Parallax: native CSS scroll-driven animations (compositor-only, no JS,
+   no library). Browsers without support simply show static images.
+   Uses the individual `translate` / `scale` properties so it never fights
+   the `transform` animations above.
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .parallax-img {
+      scale: 1.2;
+      animation: parallax-y linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    .hero-parallax {
+      animation: hero-drift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 100vh;
+    }
+    .hero-content {
+      animation: hero-out linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 85vh;
+    }
+    .drift {
+      animation: drift-y linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+@keyframes parallax-y {
+  from {
+    translate: 0 -8.5%;
+  }
+  to {
+    translate: 0 8.5%;
+  }
+}
+@keyframes hero-drift {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 30%;
+  }
+}
+@keyframes hero-out {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  to {
+    translate: 0 -10%;
+    opacity: 0.15;
+  }
+}
+@keyframes drift-y {
+  from {
+    translate: 0 40px;
+  }
+  to {
+    translate: 0 -40px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Smooth scrolling (Lenis, desktop pointers only; see enhancements.tsx).
+   Recommended Lenis CSS, plus native smooth anchors off while it runs.
+   ------------------------------------------------------------------ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+html.lenis {
+  scroll-behavior: auto !important;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Hide scrollbar for the mobile chips row if it ever overflows. */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
